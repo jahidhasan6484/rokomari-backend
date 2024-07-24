@@ -1,21 +1,18 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { userServices } from "./user.services";
+import sendResponse from "../../shared/sendResponse";
 
-const createUser = async (req: Request, res: Response) => {
+const createUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    // const data = await userServices.createAdmin(req.body);
+    const data = await userServices.createUser(req.body);
 
-    res.status(200).json({
+    sendResponse(res, {
       isSuccess: true,
-      message: "Admin created successfully",
-      // data,
+      message: "User created successfully",
+      data,
     });
   } catch (error) {
-    res.status(500).json({
-      isSuccess: false,
-      message: "Something went wrong!",
-      error,
-    });
+    next(error);
   }
 };
 

@@ -3,31 +3,25 @@ import { generateHashPassword } from "./user.utils";
 
 const prisma = new PrismaClient();
 
-const createAdmin = async (_data: any) => {
-  const { password, data } = _data;
+const createUser = async (payload: any) => {
+  const { password, data } = payload;
 
   const hashPassword = await generateHashPassword(password);
 
   const userData = {
+    name: data.name,
     email: data.email,
     password: hashPassword,
-    role: UserRole.ADMIN,
+    role: UserRole.USER,
   };
 
-  const result = await prisma.$transaction(async (transactionClient) => {
-    const createdUser = await transactionClient.user.create({
-      data: userData,
-    });
-    const createdAdmin = await transactionClient.admin.create({
-      data: data,
-    });
-
-    return createAdmin;
+  const createdUser = await prisma.user.create({
+    data: userData,
   });
 
-  return result;
+  return createdUser;
 };
 
 export const userServices = {
-  createAdmin,
+  createUser,
 };
