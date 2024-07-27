@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { userServices } from "./user.services";
+import { authServices } from "./auth.services";
 import sendResponse from "../../shared/sendResponse";
 import httpStatus from "http-status";
 
@@ -9,19 +9,19 @@ const registerUser = async (
   next: NextFunction
 ) => {
   try {
-    const data = await userServices.registerUser(req.body);
+    const result = await authServices.registerUser(req.body);
 
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: `${data.role.toLocaleLowerCase()} created successfuly`,
-      data: data,
+      message: "you are registerd as user",
+      data: result,
     });
   } catch (error) {
     next(error);
   }
 };
 
-export const userControllers = {
+export const authControllers = {
   registerUser,
 };
